@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frog.dao.QrMapper">
+	<resultMap id="BaseResultMap" type="com.frog.model.FrogRQ">
+		<id column="qr_code_id" jdbcType="VARCHAR" property="qr_code_id" />
+		<result column="qr_code_address" jdbcType="VARCHAR" property="qr_code_address" />
+		<result column="qr_longitude" jdbcType="DOUBLE" property="qr_longitude" />
+		<result column="qr_latitude" jdbcType="DOUBLE" property="qr_latitude" />
+		<result column="add_time" jdbcType="TIMESTAMP" property="add_time" />
+		<result column="del" jdbcType="BIT" property="del" />
+	</resultMap>
+	<sql id="Base_Column_List">
+	qr_code_id,qr_code_address,qr_longitude,qr_latitude,add_time,del
+	</sql>
+	<select id="selectQRInfo"  resultMap="BaseResultMap">
+	select <include refid="Base_Column_List"/> from frog_qr where qr_code_id=#{qr_code_id} and del=#{del}
+	</select>
+	<select id="selectQrInfoByQrCodeAddress" parameterType="com.frog.model.FrogRQ" resultMap="BaseResultMap">
+	select <include refid="Base_Column_List"/> from frog_qr where qr_code_address=#{qr_code_address} and del=#{del}
+	</select>
+	<select id="selectQRInfoById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	select<include refid="Base_Column_List"/> from frog_qr where 
+	</select>
+	</mapper>

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frog.dao.UserInfoMapper">
+	<resultMap id="BaseResultMap" type="com.frog.model.UserInfo">
+		<id column="user_id" jdbcType="INTEGER" property="user_id" />
+		<result column="invite_id" jdbcType="INTEGER" property="invite_id"/>
+		<result column="open_id" jdbcType="VARCHAR" property="open_id" />
+		<result column="pic_url" jdbcType="VARCHAR" property="pic_url" />
+		<result column="nick_name" jdbcType="VARCHAR" property="nick_name" />
+		<result column="union_id" jdbcType="VARCHAR" property="union_id" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="sex" jdbcType="VARCHAR" property="sex" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="update_time" />
+		<result column="add_time" jdbcType="TIMESTAMP" property="add_time" />
+		<result column="pasword" jdbcType="VARCHAR" property="pasword" />
+		<result column="wallet" jdbcType="DECIMAL" property="wallet" />
+		<result column="balance" jdbcType="DECIMAL" property="balance" />
+		<result column="total_balance" jdbcType="DECIMAL" property="total_balance" />
+		<result column="next_qr_code" jdbcType="VARCHAR" property="next_qr_code"/>
+		<result column="first_login" jdbcType="INTEGER" property="first_login"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		user_id,invite_id,open_id,pic_url,nick_name,union_id,phone,sex,update_time,add_time,pasword,wallet,balance,next_qr_code,total_balance,first_login
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from frog_user
+		where user_id = #{user_id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from frog_user
+		where user_id = #{user_id,jdbcType=INTEGER}
+	</delete>
+	<update id="updateUserNickname">
+		update frog_user set nick_name=#{nickName} where user_id=#{user_id}
+	</update>
+	<update id="updateUserPhone">
+		update frog_user set phone=#{phone} where user_id=#{user_id}
+	</update>
+	<select id="getUserInfoByPhone" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select * from frog_user where phone=#{phone,jdbcType=VARCHAR}
+	</select>
+	<select id="selectUserInfoByInviteId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" />
+		from frog_user where invite_id = #{invite_id,jdbcType=INTEGER}
+	</select>
+	<insert id="insert" parameterType="com.frog.model.UserInfo">
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="user_id">
+			SELECT LAST_INSERT_ID() AS user_id
+		</selectKey>
+		insert into frog_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="user_id != null">
+				user_id,
+			</if>
+			<if test="invite_id != null">
+				invite_id,
+			</if>
+			<if test="open_id != null">
+				open_id,
+			</if>
+			<if test="pic_url != null">
+				pic_url,
+			</if>
+			<if test="nick_name != null">
+				nick_name,
+			</if>
+			<if test="union_id != null">
+				union_id,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="sex != null">
+				sex,
+			</if>
+			<if test="add_time != null">
+				add_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+			<if test="pasword != null">
+				pasword,
+			</if>
+			<if test="wallet != null">
+				wallet,
+			</if>
+			<if test="balance != null">
+				balance,
+			</if>
+			<if test="first_login != null">
+				first_login,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="user_id != null">
+				#{user_id,jdbcType=INTEGER},
+			</if>
+			<if test="invite_id != null">
+				#{invite_id,jdbcType=INTEGER},
+			</if>
+			<if test="open_id != null">
+				#{open_id,jdbcType=VARCHAR},
+			</if>
+			<if test="pic_url != null">
+				#{pic_url,jdbcType=VARCHAR},
+			</if>
+			<if test="nick_name != null">
+				#{nick_name,jdbcType=VARCHAR},
+			</if>
+			<if test="union_id != null">
+				#{union_id,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="sex != null">
+				#{sex,jdbcType=VARCHAR},
+			</if>
+			<if test="add_time != null">
+				#{add_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="pasword != null">
+				#{pasword,jdbcType=VARCHAR},
+			</if>
+			<if test="wallet != null ">
+				#{wallet,jdbcType=DECAIMAL},
+			</if>
+			<if test="balance != null">
+				#{balance,jdbcType=DECAIMAL},
+			</if>
+			<if test="first_login != null">
+				#{first_login,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<select id="selectUserInfoByOpenId" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from frog_user where open_id=#{open_id}
+	</select>
+	<select id="selectUserInfoByUnionId" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from frog_user where union_id=#{union_id}
+	</select>
+	<update id="updateBalance" parameterType="com.frog.model.UserInfo">
+		update frog_user set balance =#{balance} where user_id=#{user_id}
+	</update>
+	<update id="updateInviteID" parameterType="com.frog.model.UserInfo">
+		update frog_user set  invite_id=#{invite_id} where user_id=#{user_id}
+	</update>
+	<update id="updateLoginType" parameterType="com.frog.model.UserInfo">
+		update frog_user set  first_login=#{first_login} where user_id=#{user_id}
+	</update>
+	<update id="updateTotalBalance" parameterType="com.frog.model.UserInfo">
+		update frog_user set total_balance =#{total_balance} where user_id=#{user_id}
+	</update>
+	<!--  <select id="selectUserIdByTakeId" parameterType=""></select>-->
+	<select id="selectUserByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" />
+		from frog_user where user_id=#{user_id}
+	</select>
+	<update id="updateUserInfoByUserId" parameterType="com.frog.model.UserInfo">
+	update frog_user set phone=#{phone},
+	update_time=now()
+	where user_id=#{user_id}
+	</update>
+	<update id="updateUserInfo" parameterType="com.frog.model.UserInfo" >
+	update frog_user set next_qr_code=#{next_qr_code},
+	update_time=now()
+	where user_id=#{user_id}
+	</update>
+	<select id="getUserInfoByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	select <include refid="Base_Column_List"/> from frog_user where user_id=#{user_id}
+	</select>
+<!-- 	<select id="getUserInfoByPhone" parameterType="java.lang.String" resultMap="BaseResultMap"> -->
+<!-- 	select <include refid="Base_Column_List"/> from frog_user where phone=#{phone} -->
+<!-- 	</select> -->
+</mapper>

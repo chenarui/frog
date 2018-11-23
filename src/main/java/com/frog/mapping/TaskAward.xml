@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frog.dao.TaskAwardMapper">
+	<resultMap id="BaseResultMap" type="com.frog.model.TaskAward">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="awardname" jdbcType="VARCHAR" property="awardname"/>
+		<result column="awardpic" jdbcType="VARCHAR" property="awardpic" />
+		<result column="awardnum" jdbcType="INTEGER" property="awardnum" />
+		<result column="awardsurplus" jdbcType="INTEGER" property="awardsurplus"/>
+		<result column="probability" jdbcType="INTEGER" property="probability"/>
+		<result column="addtime" jdbcType="TIMESTAMP" property="addtime" />
+		<result column="endtime" jdbcType="TIMESTAMP" property="endtime" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,awardname,awardpic,awardnum,awardsurplus,probability,addtime,endtime
+	</sql>
+	<select id="getAllTaskAwards" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" />
+		from frog_task_award limit #{page},5
+	</select>
+	<update id="updateTaskAwardById" parameterType="com.frog.model.TaskAward">
+		update frog_task_award set
+		<trim prefix=" " suffix=" " suffixOverrides=",">
+			<if test="id != null">
+				id=#{id,jdbcType=INTEGER},
+			</if>
+			<if test="awardname != null">
+				awardname=#{awardname,jdbcType=VARCHAR},
+			</if>
+			<if test="awardsurplus != null">
+				awardsurplus=#{awardsurplus,jdbcType=INTEGER},
+			</if>
+			<if test="awardpic != null">
+				awardpic=#{awardpic,jdbcType=VARCHAR},
+			</if>
+			<if test="awardnum != null">
+				awardnum=#{awardnum,jdbcType=INTEGER},
+			</if>
+			<if test="addtime != null">
+				addtime=#{addtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endtime != null">
+				endtime=#{endtime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+		where id=#{id,jdbcType=INTEGER}
+	</update>
+	<delete id="deleteTaskAwardById" parameterType="java.lang.Integer">
+		delete from frog_task_award where id=#{id,jdbcType=INTEGER}
+	</delete>
+	<select id="getTaskAwardById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" />
+		from frog_task_award
+		where id=#{id,jdbcType=INTEGER}
+	</select>
+	<insert id="insertTaskAward" parameterType="com.frog.model.TaskAward">
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="id">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+		insert into frog_task_award
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		<if test="id != null">
+				id,
+			</if>
+			<if test="awardname != null">
+				awardname,
+			</if>
+			<if test="awardpic != null">
+				awardpic,
+			</if>
+			<if test="awardnum != null">
+				awardnum,
+			</if>
+			<if test="add_time != null">
+				addtime,
+			</if>
+			<if test="end_time != null">
+				endtime,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id=#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="awardname != null">
+				awardname=#{awardname,jdbcType=VARCHAR},
+			</if>
+			<if test="awardpic != null">
+				awardpic=#{awardpic,jdbcType=VARCHAR},
+			</if>
+			<if test="awardnum != null">
+				awardnum=#{awardnum,jdbcType=INTEGER},
+			</if>
+			<if test="add_time != null">
+				addtime=#{addtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="end_time != null">
+				endtime=#{endtime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<select id="getActivityAwardsByActivityId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select a.id,a.awardname,a.awardpic,a.awardnum
+		from frog_task_award a,frog_activity_event b
+		where b.activityid=#{activityid} and a.id=b.completeawardid
+	</select>
+</mapper>

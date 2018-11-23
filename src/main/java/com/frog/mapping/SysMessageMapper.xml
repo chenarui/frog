@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frog.dao.SysMessageMapper">
+	<resultMap id="BaseResultMap" type="com.frog.model.SysMessage">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="user_id" jdbcType="INTEGER" property="user_id"/>
+		<result column="info" jdbcType="VARCHAR" property="info" />
+		<result column="add_time" jdbcType="TIMESTAMP" property="add_time" />
+		<result column="type" jdbcType="INTEGER" property="type"/>
+		<result column="pic" jdbcType="VARCHAR" property="pic" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,user_id,info,add_time,type,pic
+	</sql>
+	<select id="selectSysMessage" resultType="com.frog.model.SysMessage" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" />
+		from sys_message ORDER BY add_time DESC
+	</select>
+	<select id="selectSysMessageByUser" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" />
+		from sys_message  where user_id=#{user_id}
+	</select>
+	<insert id="insertMessage" parameterType="com.frog.model.SysMessage">
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="id">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+		insert into sys_message
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="user_id != null">
+				user_id,
+			</if>
+			<if test="info != null">
+				info,
+			</if>
+			<if test="add_time != null">
+				add_time,
+			</if>
+			<if test="pic != null">
+				pic,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="user_id != null">
+				#{user_id,jdbcType=INTEGER},
+			</if>
+			<if test="info != null">
+				#{info,jdbcType=VARCHAR},
+			</if>
+			<if test="add_time != null">
+				#{add_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="pic != null">
+				#{pic,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateAddressType" parameterType="com.frog.model.SysMessage">
+		update sys_message set type =#{type} where id=#{id}
+	</update>
+</mapper>

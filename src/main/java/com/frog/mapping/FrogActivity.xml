@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frog.dao.FrogActivityEventMapper">
+	<resultMap id="BaseResultMap" type="com.frog.model.FrogActivityEvent">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="eventname" jdbcType="VARCHAR" property="eventname"/>
+		<result column="des" jdbcType="VARCHAR" property="des" />
+		<result column="completeawardid" jdbcType="INTEGER" property="completeawardid" />
+		<result column="activityid" jdbcType="INTEGER" property="activityid" />
+		<result column="diff" jdbcType="VARCHAR" property="diff"/>
+		<result column="theme" jdbcType="VARCHAR" property="theme"/>
+		<result column="event_pic" jdbcType="VARCHAR" property="event_pic"/>
+		<result column="event_ref" jdbcType="VARCHAR" property="event_ref"/>
+		<result column="additional" jdbcType="VARCHAR" property="additional"/>
+		<result column="event_price" jdbcType="DOUBLE" property="event_price"/>
+		<result column="address" jdbcType="VARCHAR" property="address"/>
+		<result column="event_wire" jdbcType="VARCHAR" property="event_wire"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,eventname,des,completeawardid,activityid,diff,theme,event_pic,event_ref,additional,event_price,address,event_wire
+	</sql>
+	<resultMap id="TaskAwardtMap" type="com.frog.model.TaskAward">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="awardname" jdbcType="VARCHAR" property="awardname"/>
+		<result column="awardpic" jdbcType="VARCHAR" property="awardpic" />
+		<result column="awardnum" jdbcType="INTEGER" property="awardnum" />
+		<result column="awardsurplus" jdbcType="INTEGER" property="awardsurplus"/>
+		<result column="probability" jdbcType="INTEGER" property="probability"/>
+		<result column="addtime" jdbcType="TIMESTAMP" property="addtime" />
+		<result column="endtime" jdbcType="TIMESTAMP" property="endtime" />
+	</resultMap>
+	<sql id="Base_Award_List">
+		id,awardname,awardpic,awardnum,awardsurplus,probability,addtime,endtime
+	</sql>
+	<delete id="deleteFrogActivityEventById" parameterType="java.lang.Integer">
+		delete from frog_activity_event where id=#{id}
+	</delete>
+	<select id="selectFrogActivityEventById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/>
+		from frog_activity_event
+		where id=#{id}
+	</select>
+	<select id="selectAllActivityEvents" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/>
+		from frog_activity_event
+	</select>
+	<select id="seletcFrogActivityEventsByActivityId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/>
+		from frog_activity_event
+		where activityid=#{activityid}
+	</select>
+	<select id="selectAwardByEnent" parameterType="java.lang.Integer" resultMap="TaskAwardtMap">
+	    select b.awardname,b.id,b.awardsurplus,b.awardnum,b.awardpic,b.probability,b.addtime,b.endtime
+	    from frog_activity_event a,frog_task_award b
+	    where a.completeawardid=b.id and a.id=#{eventId}
+	</select>
+	<insert id="addFrogActivityEvent" parameterType="com.frog.model.FrogActivityEvent">
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="id">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+		insert into frog_activity_event
+		<trim suffix=")" prefix="(" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="eventname != null">
+				eventname,
+			</if>
+			<if test="des != null">
+				des,
+			</if>
+			<if test="completeawardid != null">
+				completeawardid,
+			</if>
+			<if test="activityid != null">
+				activityid,
+			</if>
+			<if test="diff != null">
+				diff,
+			</if>
+			<if test="theme != null">
+				theme,
+			</if>
+			<if test="event_pic != null">
+				event_pic,
+			</if>
+			<if test="event_ref != null">
+				event_ref,
+			</if>
+			<if test="additional != null">
+				additional,
+			</if>
+			<if test="event_price != null">
+				event_price,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+			<if test="event_wire != null">
+				event_wire
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="eventname != null">
+				#{eventname},
+			</if>
+			<if test="des != null">
+				#{des},
+			</if>
+			<if test="completeawardid != null">
+				#{completeawardid},
+			</if>
+			<if test="activityid != null">
+				#{activityid},
+			</if>
+			<if test="diff != null">
+				#{diff},
+			</if>
+			<if test="theme != null">
+				#{theme},
+			</if>
+			<if test="event_pic != null">
+				#{event_pic},
+			</if>
+			<if test="event_ref != null">
+				#{event_ref},
+			</if>
+			<if test="additional != null">
+				#{additional},
+			</if>
+			<if test="event_price != null">
+				#{event_price},
+			</if>
+			<if test="address != null">
+				#{address},
+			</if>
+			<if test="event_wire != null">
+				#{event_wire}
+			</if>
+		</trim>
+	</insert>
+	
+	<insert id="addEventPic" parameterType="com.frog.model.FrogActivityEvent">
+	insert into frog_activity_event(event_pic) values(#{event_pic})
+	</insert>
+	
+	<select id="selectEventByDiff" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	select <include refid="Base_Column_List"/>
+	from frog_activity_event 
+	where diff=#{diff}
+	</select>
+	
+	<select id="selectEventByDiffTheme" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	select <include refid="Base_Column_List"/>
+	from frog_activity_event 
+	where diff=#{diff} and theme=#{theme}
+	</select>
+	
+	<select id="selectEvents" parameterType="com.frog.model.FrogActivityEvent" resultMap="BaseResultMap">
+	select eventname,event_pic from frog_activity_event
+	</select>
+	
+	
+</mapper>

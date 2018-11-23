@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frog.dao.FrogActivityAwardMapper">
+	<resultMap id="BaseResultMap" type="com.frog.model.FrogActivityAward">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="awardname" jdbcType="VARCHAR" property="awardname" />
+		<result column="awardpic" jdbcType="VARCHAR" property="awardpic" />
+		<result column="awardnum" jdbcType="INTEGER" property="awardnum" />
+		<result column="awardsurplus" jdbcType="INTEGER" property="awardsurplus" />
+		<result column="addtime" jdbcType="TIMESTAMP" property="addtime" />
+		<result column="endtime" jdbcType="TIMESTAMP" property="endtime" />
+		<result column="activity_id" jdbcType="INTEGER" property="activity_id" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,awardname,awardpic,awardnum,awardsurplus,addtime,endtime,activity_id
+	</sql>
+	<update id="updateAwards" parameterType="com.frog.model.FrogActivityAward">
+		update frog_activity_awardinfo set
+		<trim prefix=" " suffix=" " suffixOverrides=",">
+			<if test="awardname != null">
+				awardname=#{awardname,jdbcType=VARCHAR},
+			</if>
+			<if test="awardpic != null">
+				awardpic=#{awardpic,jdbcType=VARCHAR},
+			</if>
+			<if test="awardnum != null">
+				awardnum=#{awardnum,jdbcType=INTEGER},
+			</if>
+			<if test="awardsurplus != null">
+				awardsurplus=#{awardsurplus,jdbcType=INTEGER},
+			</if>
+			<if test="addtime != null">
+				addtime=#{addtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endtime != null">
+				endtime=#{endtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="activity_id != null">
+				activity_id=#{activity_id,jdbcType=INTEGER},
+			</if>
+		</trim>
+		where id=#{id,jdbcType=INTEGER}
+	</update>
+	<select id="getAllAwards" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/> 
+		from frog_activity_awardinfo
+		where activity_id=#{activityId} and awardsurplus>0
+ 	</select>
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frog.dao.FrogAwardMapper">
+	<resultMap id="BaseResultMap" type="com.frog.model.FrogAward">
+		<id column="award_id" jdbcType="INTEGER" property="award_id" />
+		<result column="pic" jdbcType="VARCHAR" property="pic"/>
+		<result column="info" jdbcType="VARCHAR" property="info" />
+		<result column="title" jdbcType="VARCHAR" property="title" />
+		<result column="is_del" jdbcType="INTEGER" property="is_del" />
+		<result column="start_time" jdbcType="TIMESTAMP" property="start_time" />
+		<result column="end_time" jdbcType="TIMESTAMP" property="end_time" />
+		<result column="url" jdbcType="VARCHAR" property="url"/>
+		<result column="type" jdbcType="INTEGER" property="type"/>
+		<result column="activity_id" jdbcType="INTEGER" property="activity_id"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		award_id,pic,info,is_del,start_time,end_time,title,url,type,activity_id
+	</sql>
+	<select id="selectFrogAwardByUser" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" />
+		from frog_award 
+		where is_del=0 or is_del=2 
+		order by type desc,is_del asc,start_time desc
+	</select>
+	<select id="selectByAwardId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" />
+		from frog_award  where award_id=#{award_id}
+	</select>
+	<select id="selectFrogAwardByType" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" />
+		from frog_award  where type=#{type}
+	</select>
+</mapper>

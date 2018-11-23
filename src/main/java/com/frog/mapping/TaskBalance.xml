@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frog.dao.TaskBalanceMapper">
+	<resultMap id="BaseResultMap" type="com.frog.model.FrogTake">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="user_id" jdbcType="INTEGER" property="user_id" />
+		<result column="balance" jdbcType="DECIMAL" property="balance" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		user_id,balance
+	</sql>
+	<insert id="insertBalance" parameterType="com.frog.model.FrogTaskBalance">
+		insert into frog_balance (user_id,balance) values (#{user_id},#{balance})
+	</insert>
+	<update id="updateBalance" parameterType="com.frog.model.FrogTaskBalance">
+		update frog_balance set balance =#{balance}
+	</update>
+	<select id="selectBalanceByUserId" parameterType="java.lang.Integer">
+		select <include refid="Base_Column_List"/>
+		from frog_balance 
+		where user_id=#{user_id}
+	</select>
+
+</mapper>

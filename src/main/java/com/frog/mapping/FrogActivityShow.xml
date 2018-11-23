@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frog.dao.FrogActivityShowMapper">
+	<resultMap id="BaseResultMap" type="com.frog.model.FrogActivityShow">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<id column="user_id" jdbcType="INTEGER" property="user_id" />
+		<id column="isshowed" jdbcType="VARCHAR" property="isshowed" />
+		<result column="showtime" jdbcType="TIMESTAMP" property="showtime" />
+		<result column="activityid" jdbcType="INTEGER" property="activityid"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,user_id,isshowed,showtime,activityid
+	</sql>
+	<insert id="insert" parameterType="com.frog.model.FrogActivityShow">
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="id">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+		insert into frog_activity_show
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="user_id != null">
+				user_id,
+			</if>
+			<if test="isshowed != null">
+				isshowed,
+			</if>
+			<if test="showtime != null">
+				showtime,
+			</if>
+			<if test="activityid != null">
+				activityid,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="user_id != null">
+				#{user_id,jdbcType=INTEGER},
+			</if>
+			<if test="isshowed != null">
+				#{isshowed,jdbcType=VARCHAR},
+			</if>
+				<if test="showtime != null">
+				#{showtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="activityid != null">
+				#{activityid,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<select id="selectByUseridAndActivityId" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/> 
+		from frog_activity_show
+		where user_id=#{user_id} and activityid=#{activityid}
+ 	</select>
+</mapper>

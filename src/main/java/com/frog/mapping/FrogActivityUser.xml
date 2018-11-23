@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frog.dao.FrogActivityUserMapper">
+	<resultMap id="BaseResultMap" type="com.frog.model.FrogActivityUser">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="userid" jdbcType="INTEGER" property="userid"/>
+		<result column="state" jdbcType="INTEGER" property="state"/>
+		<result column="noweventid" jdbcType="INTEGER" property="noweventid"/>
+		<result column="addtime" jdbcType="TIMESTAMP" property="addtime" />
+		<result column="activityid" jdbcType="INTEGER" property="activityid"/>
+		<result column="eventstep" jdbcType="INTEGER" property="eventstep"/>
+	</resultMap>
+	<resultMap id="UserMap" type="com.frog.model.UserInfo">
+		<id column="user_id" jdbcType="INTEGER" property="user_id" />
+		<result column="invite_id" jdbcType="INTEGER" property="invite_id"/>
+		<result column="open_id" jdbcType="VARCHAR" property="open_id" />
+		<result column="pic_url" jdbcType="VARCHAR" property="pic_url" />
+		<result column="nick_name" jdbcType="VARCHAR" property="nick_name" />
+		<result column="union_id" jdbcType="VARCHAR" property="union_id" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="sex" jdbcType="VARCHAR" property="sex" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="update_time" />
+		<result column="add_time" jdbcType="TIMESTAMP" property="add_time" />
+		<result column="pasword" jdbcType="VARCHAR" property="pasword" />
+		<result column="wallet" jdbcType="DECIMAL" property="wallet" />
+		<result column="balance" jdbcType="DECIMAL" property="balance" />
+		<result column="total_balance" jdbcType="DECIMAL" property="total_balance" />
+		<result column="next_qr_code" jdbcType="VARCHAR" property="next_qr_code"/>
+		<result column="first_login" jdbcType="INTEGER" property="first_login"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,userid,state,noweventid,addtime,activityid,eventstep
+	</sql>
+	<select id="selectFrogActivityUsersCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select count(*) from frog_activity_user where activityid=#{activityid}
+	</select>
+	<select id="selectAllFrogActivityUsersNoState" parameterType="java.lang.Integer" resultMap="UserMap">
+		select a.user_id,a.pic_url,a.nick_name 
+		from frog_activity_user b, frog_user a 
+		where a.user_id=b.userid and b.activityid=#{activityid} limit 0,10
+	</select>
+	<select id="selectAllFrogActivityUsers"  resultMap="UserMap">
+		select a.user_id,a.pic_url,a.nick_name 
+		from frog_activity_user b, frog_user a 
+		where a.user_id=b.userid and b.state=#{state} and b.activityid=#{activityid}
+	</select>
+	<select id="selectUserNowActivity" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/>
+		from frog_activity_user
+		where userid=#{userid} and state=0
+	</select>
+	<select id="selectNowUserEvent"  resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/>
+		from frog_activity_user
+		where userid=#{userid} and activityid=#{activityid}
+	</select>
+	<update id="updateActivityUserState" parameterType="java.lang.Integer">
+		update frog_activity_user set state=#{state} 
+		where userid=#{userid} and activityid=#{activityid}
+	</update>
+	<update id="updateActivityUserStep" parameterType="java.lang.Integer">
+		update frog_activity_user set eventstep=#{eventstep} 
+		where userid=#{userid} and activityid=#{activityid}
+	</update>
+	<insert id="insertFrogActivityUser" parameterType="com.frog.model.FrogActivityUser">
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="id">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+		insert into frog_activity_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		     <if test="id !=null">
+		     id,
+		     </if>
+			<if test="userid != null">
+				userid,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="noweventid != null">
+				noweventid,
+			</if>
+			<if test="addtime != null">
+				addtime,
+			</if>
+			<if test="activityid != null">
+				activityid,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="userid != null">
+				#{userid,jdbcType=INTEGER},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=INTEGER},
+			</if>
+			<if test="noweventid != null">
+				#{noweventid,jdbcType=INTEGER},
+			</if>
+			<if test="addtime != null">
+				#{addtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="activityid != null">
+				#{activityid,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+</mapper>

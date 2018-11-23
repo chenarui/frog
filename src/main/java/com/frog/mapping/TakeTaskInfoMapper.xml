@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frog.dao.TakeTaskInfoMapper">
+	<resultMap id="BaseResultMap" type="com.frog.model.FrogTake">
+		<id column="take_id" jdbcType="INTEGER" property="take_id" />
+		<result column="task_id" jdbcType="INTEGER" property="task_id" />
+		<result column="user_id" jdbcType="INTEGER" property="user_id" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="add_time" jdbcType="TIMESTAMP" property="add_time" />
+		<result column="complete_time" jdbcType="TIMESTAMP" property="complete_time" />
+		<result column="give_up_time" jdbcType="TIMESTAMP" property="give_up_time" />
+		<result column="foot_step" jdbcType="INTEGER" property="foot_step"/>
+		<result column="hand_task_time" jdbcType="TIMESTAMP" property="hand_task_time" />
+		<result column="task_name" jdbcType="VARCHAR" property="task_name"/>
+		<result column="task_info" jdbcType="VARCHAR" property="task_info"/>
+		<result column="distance" jdbcType="DOUBLE" property="distance"/>
+		<result column="start_longitude" jdbcType="DOUBLE" property="start_longitude"/>
+		<result column="start_latitude" jdbcType="DOUBLE" property="start_latitude"/>
+		<result column="final_longitude" jdbcType="DOUBLE" property="final_longitude"/>
+		<result column="final_latitude" jdbcType="DOUBLE" property="final_latitude"/>
+		<result column="task_price" jdbcType="DOUBLE" property="task_price"/>
+		<result column="hea_price" jdbcType="DOUBLE" property="hea_price"/>
+		<result column="total_price" jdbcType="DOUBLE" property="total_price"/>
+		<result column="task_price" jdbcType="DOUBLE" property="task_price"/>
+		<result column="type" jdbcType="INTEGER" property="type"/>
+		<result column="last_taskid" jdbcType="INTEGER" property="last_taskid"/>
+		<result column="qr_code_id" jdbcType="VARCHAR" property="qr_code_id"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		take_id,task_id,user_id,status,add_time,complete_time,foot_step,distance,hand_task_time,task_info,task_name,start_longitude,start_latitude,final_longitude,final_latitude,task_price,hea_price,total_price,type,last_taskid,qr_code_id
+	</sql>
+	<insert id="insert" parameterType="com.frog.model.FrogTake">
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="take_id">
+			SELECT LAST_INSERT_ID() AS take_id
+		</selectKey>
+		insert into frog_take
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="take_id !=null">
+				take_id,
+			</if>
+			<if test="task_id != null">
+				task_id,
+			</if>
+			<if test="user_id != null">
+				user_id,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="add_time != null">
+				add_time,
+			</if>
+			<if test="task_name != null">
+				task_name,
+			</if>
+			<if test="task_info != null">
+				task_info,
+			</if>
+			<if test="start_longitude != null">
+				start_longitude,
+			</if>
+			<if test="start_latitude != null">
+				start_latitude,
+			</if>
+			<if test="final_longitude != null">
+				final_longitude,
+			</if>
+			<if test="final_latitude != null">
+				final_latitude,
+			</if>
+			<if test="task_price != null">
+				task_price,
+			</if>
+			<if test="hea_price != null">
+				hea_price,
+			</if>
+			<if test="total_price != null">
+				total_price,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="last_taskid != null">
+				last_taskid,
+			</if>
+			<if test="qr_code_id != null">
+				qr_code_id,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="take_id !=null ">
+				#{take_id,jdbcType=INTEGER},
+			</if>
+			<if test="task_id != null">
+				#{task_id,jdbcType=INTEGER},
+			</if>
+			<if test="user_id != null">
+				#{user_id,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="add_time != null">
+				#{add_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="task_name != null">
+				#{task_name,jdbcType=VARCHAR},
+			</if>
+			<if test="task_info != null">
+				#{task_info,jdbcType=VARCHAR},
+			</if>
+			<if test="start_longitude != null">
+				#{start_longitude,jdbcType=DOUBLE},
+			</if>
+			<if test="start_latitude != null">
+				#{start_latitude,jdbcType=DOUBLE},
+			</if>
+			<if test="final_longitude != null">
+				#{final_longitude,jdbcType=DOUBLE},
+			</if>
+			<if test="final_latitude != null">
+				#{final_latitude,jdbcType=DOUBLE},
+			</if>
+			<if test="task_price != null">
+				#{task_price,jdbcType=DOUBLE},
+			</if>
+			<if test="hea_price != null">
+				#{hea_price,jdbcType=DOUBLE},
+			</if>
+			<if test="total_price != null">
+				#{total_price,jdbcType=DOUBLE},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=INTEGER},
+			</if>
+			<if test="last_taskid != null">
+				#{last_taskid,jdbcType=INTEGER},
+			</if>
+			<if test="qr_code_id != null">
+				#{qr_code_id,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="operateTakeTask" parameterType="com.frog.model.FrogTake">
+		update frog_take set status=#{status},
+		<if test="foot_step !=null">
+		foot_step=#{foot_step},
+		</if>
+		<if test="distance !=null">
+		      distance=#{distance},
+		</if>
+		<if test="type==1">
+			give_up_time=now()
+		</if>
+		<if test="type==2">
+			complete_time=now()
+		</if>
+		where take_id=#{take_id}
+	</update>
+	<select id="selectTakeByTakeId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List"/>
+		from frog_take where take_id=#{take_id}
+	</select>
+	<select id="selectNoCompleteTask" parameterType="map" resultType="java.lang.Integer">
+	select count(1) from frog_take where status=#{status} and user_id=#{user_id}
+	</select>
+	<select id="selectTakeInfoBytakeId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	select <include refid="Base_Column_List"/> from frog_take where take_id=#{take_id}
+	</select>
+	<select id="selectAllMyTask" parameterType="com.frog.model.FrogTake" resultMap="BaseResultMap">
+	select <include refid="Base_Column_List"/> from frog_take where user_id=#{user_id} and status=#{status}
+	order by add_time desc
+	limit #{page},5
+	</select>
+	<select id="selectNowTask" parameterType="com.frog.model.FrogTake" resultMap="BaseResultMap">
+	select <include refid="Base_Column_List"/> from frog_take where user_id=#{user_id} and status=#{status}
+	</select>
+	<select id="selectTakeInfo" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	select <include refid="Base_Column_List"/> from frog_take where take_id=#{take_id}
+	</select>
+	<select id="selectUserTaskInfoByStatus" parameterType="map" resultMap="BaseResultMap">
+	select <include refid="Base_Column_List"/> from frog_take where status=#{status} and user_id=#{user_id}
+	</select>
+	<select id="selectTasking" parameterType="com.frog.model.FrogTake" resultMap="BaseResultMap">
+	select <include refid="Base_Column_List"/> from frog_take where user_id=#{user_id} and status=#{status}
+	</select>
+	
+</mapper>

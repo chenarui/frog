@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://code.alibabatech.com/schema/dubbo
+      http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <import resource="classpath:spring.xml"/>
+
+    <!-- 提供方应用信息，用于计算依赖关系 -->
+    <dubbo:application name="frog-provider"/>
+    <!-- 使用zookeeper注册中心暴露服务地址 -->
+    <!-- <dubbo:registry protocol="zookeeper" address="zookeeper://127.0.0.1:2181"/>
+      <dubbo:registry protocol="zookeeper" address="zookeeper://127.0.0.1:2181"/>
+     -->
+    <dubbo:registry protocol="zookeeper" address="zookeeper://127.0.0.1:2181"/>
+    <!-- 用dubbo协议在20880端口暴露服务 -->
+    <dubbo:protocol name="dubbo" port="20881"/>
+<!-- 延迟到Spring初始化完成后，再暴露服务,服务调用超时设置为5秒,超时不重试--> 
+    <dubbo:provider delay="-1" timeout="50000" retries="0"/>
+    
+	<bean id="userServiceImpl" class="com.frog.serviceImpl.UserServiceImpl"/>
+	<dubbo:service interface="com.frog.service.UserService" ref="userServiceImpl"/>
+	
+	<bean id="commonServiceImpl" class="com.frog.serviceImpl.CommonServiceImpl"/>
+	<dubbo:service interface="com.frog.service.CommonService" ref="commonServiceImpl"/>
+	
+	<bean id="taskServiceImpl" class="com.frog.serviceImpl.TaskServiceImpl"/>
+	<dubbo:service interface="com.frog.service.TaskService" ref="taskServiceImpl"/>
+	
+	<bean id="taskTakeServiceImpl" class="com.frog.serviceImpl.TaskTakeServiceImpl"/>
+	<dubbo:service interface="com.frog.service.TaskTakeService" ref="taskTakeServiceImpl"/>
+	
+	<bean id="userAddressServiceImpl" class="com.frog.serviceImpl.UserAddressServiceImpl"/>
+	<dubbo:service interface="com.frog.service.UserAddressService" ref="userAddressServiceImpl"/>
+	
+	<bean id="frogGoodServiceImpl" class="com.frog.serviceImpl.FrogGoodServiceImpl"/>
+	<dubbo:service interface="com.frog.service.FrogGoodService" ref="frogGoodServiceImpl"/>
+	
+	<bean id="exchangeInfoServiceImpl" class="com.frog.serviceImpl.ExchangeInfoServiceImpl"/>
+	<dubbo:service interface="com.frog.service.ExchangeInfoService" ref="exchangeInfoServiceImpl"/>
+    
+     
+     
+     <bean id="userChipServiceImpl" class="com.frog.serviceImpl.UserChipServiceImpl"/>
+     <dubbo:service interface="com.frog.service.UserChipService" ref="userChipServiceImpl"/>
+     
+     <bean id="sysConfigServiceImpl" class="com.frog.serviceImpl.SysConfigServiceImpl"/>
+     <dubbo:service interface="com.frog.service.SysConfigService" ref="sysConfigServiceImpl"/>
+     
+     <bean id="userChipInfoServiceImpl" class="com.frog.serviceImpl.UserChipInfoServiceImpl"/>
+     <dubbo:service interface="com.frog.service.UserChipInfoService" ref="userChipInfoServiceImpl"/>
+     
+     <bean id="sysMessageServiceImpl" class="com.frog.serviceImpl.SysMessageServiceImpl"/>
+     <dubbo:service interface="com.frog.service.SysMessageService" ref="sysMessageServiceImpl"/>
+     
+     <bean id="frogAwardsDetailServiceImpl" class="com.frog.serviceImpl.FrogAwardsDetailServiceImpl"/>
+     <dubbo:service interface="com.frog.service.FrogAwardsDetailService" ref="frogAwardsDetailServiceImpl"/>
+
+     <bean id="frogAwardServiceImpl" class="com.frog.serviceImpl.FrogAwardServiceImpl"/>
+     <dubbo:service interface="com.frog.service.FrogAwardService" ref="frogAwardServiceImpl"/>
+     
+      <bean id="frogActivityServiceImpl" class="com.frog.serviceImpl.FrogActivityServiceImpl"/>
+     <dubbo:service interface="com.frog.service.FrogActivityService" ref="frogActivityServiceImpl"/>
+      <bean id="pushServiceImpl" class="com.frog.serviceImpl.PushServiceImpl"/>
+     <dubbo:service interface="com.frog.service.PushService" ref="pushServiceImpl"/>
+     <bean id="taskAwardServiceImpl" class="com.frog.serviceImpl.TaskAwardServerImpl"/>
+     <dubbo:service interface="com.frog.service.TaskAwardService" ref="taskAwardServiceImpl"/>
+     <bean id="frogActivityEventServiceImpl" class="com.frog.serviceImpl.FrogActivityEventServiceImpl"/>
+      <dubbo:service interface="com.frog.service.FrogActivityEventService" ref="frogActivityEventServiceImpl"/>
+        <bean id="frogActivityUserServiceImpl" class="com.frog.serviceImpl.FrogActivityUserServiceImpl"/>
+      <dubbo:service interface="com.frog.service.FrogActivityUserService" ref="frogActivityUserServiceImpl"/>
+      <bean id="frogActivityEventPlaceServiceImpl" class="com.frog.serviceImpl.FrogActivityEventPlaceServiceImpl"/>
+      <dubbo:service interface="com.frog.service.FrogActivityEventPlaceService" ref="frogActivityEventPlaceServiceImpl"/>
+      <bean id="frogActivityAwardHisServiceImpl" class="com.frog.serviceImpl.FrogActivityAwardHisServiceImpl"/>
+      <dubbo:service interface="com.frog.service.FrogActivityAwardHisService" ref="frogActivityAwardHisServiceImpl"/>
+      <bean id="frogActivityShowServiceImpl" class="com.frog.serviceImpl.FrogActivityShowServiceImpl"/>
+      <dubbo:service interface="com.frog.service.FrogActivityShowService" ref="frogActivityShowServiceImpl"/>
+      <bean id="proposalServiceImpl" class="com.frog.serviceImpl.ProposalServiceImpl"/>
+      <dubbo:service interface="com.frog.service.ProposalService" ref="proposalServiceImpl"/>
+       <bean id="statisticServiceImpl" class="com.frog.serviceImpl.StaticticServiceImpl"/>
+      <dubbo:service interface="com.frog.service.StatisticsService" ref="statisticServiceImpl"/>
+      <bean id="frogPlayServiceImpl" class="com.frog.serviceImpl.FrogPlayServiceImpl"/>
+      <dubbo:service interface="com.frog.service.FrogPlayService" ref="frogPlayServiceImpl"/>
+      <bean id="managerServiceImpll" class="com.frog.serviceImpl.manage.ManagerServiceImpll"/>
+      <dubbo:service interface="com.frog.service.manage.ManageService" ref="managerServiceImpll"/>
+      
+</beans>

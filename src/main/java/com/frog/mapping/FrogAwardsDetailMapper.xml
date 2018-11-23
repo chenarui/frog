@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frog.dao.FrogAwardsDetailMapper">
+	<resultMap id="BaseResultMap" type="com.frog.model.FrogAwardsDetail">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="user_id" jdbcType="INTEGER" property="user_id" />
+		<result column="address" jdbcType="VARCHAR" property="address" />
+		<result column="type" jdbcType="INTEGER" property="type" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="award_info" jdbcType="VARCHAR" property="award_info"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,user_id,address,type,name,phone,award_info
+	</sql>
+	<update id="updateDetail" parameterType="java.lang.Integer">
+		update user_award_detail set 
+		<if test="address != null">
+				address=#{address},
+		</if>
+		<if test="type != null">
+				type=#{type},
+		</if>
+		<if test="name != null">
+				name=#{name},
+		</if>
+		<if test="phone != null">
+				phone=#{phone},
+		</if>
+		<if test="award_info != null">
+				award_info=#{award_info}
+		</if>
+		where user_id=#{user_id}
+	</update>
+	<insert id="insertAwardDetail" parameterType="com.frog.model.FrogAwardsDetail">
+		insert into user_award_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="user_id != null">
+				user_id,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="award_info != null">
+				award_info,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="user_id != null">
+				#{user_id,jdbcType=INTEGER},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="award_info != null">
+				#{award_info,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="selectAwardDetail" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List"/>
+		from user_award_detail where user_id= #{user_id}
+	</select>
+</mapper>

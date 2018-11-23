@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frog.dao.FrogActivityEventPlaceMapper">
+	<resultMap id="BaseResultMap" type="com.frog.model.FrogActivityEventPlace">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="eventid" jdbcType="INTEGER" property="eventid" />
+		<result column="taskid" jdbcType="INTEGER" property="taskid" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,eventid,taskid
+	</sql>
+	<resultMap id="TaskMap" type="com.frog.model.FrogTask">
+		<id column="task_id" jdbcType="INTEGER" property="task_id" />
+		<result column="task_pic_id" jdbcType="VARCHAR" property="task_pic_id" />
+		<result column="task_info" jdbcType="VARCHAR" property="task_info" />
+		<result column="del" jdbcType="BIT" property="del" />
+		<result column="modify_time" jdbcType="TIMESTAMP" property="modify_time" />
+		<result column="add_time" jdbcType="TIMESTAMP" property="add_time" />
+		<result column="longitude" jdbcType="DOUBLE" property="longitude" />
+		<result column="latitude" jdbcType="DOUBLE" property="latitude" />
+		<result column="balance" jdbcType="DOUBLE" property="balance"/>
+		<result column="qr_code_url" jdbcType="VARCHAR" property="qr_code_url"/>
+		<result column="qr_code_id" jdbcType="VARCHAR" property="qr_code_id"/>
+		<result column="address" jdbcType="VARCHAR" property="address"/>
+		<result column="qr_address" jdbcType="VARCHAR" property="qr_address"/>
+		<result column="task_title" jdbcType="VARCHAR" property="task_title"/>
+		<result column="task_distance" jdbcType="DOUBLE" property="task_distance"/>
+		<result column="task_type" jdbcType="BIT" property="task_type"/>
+		<result column="award" jdbcType="VARCHAR" property="award"/>
+		<result column="task_durtion" jdbcType="VARCHAR" property="task_durtion"/>
+		<result column="next_taskid" jdbcType="INTEGER" property="next_taskid"/>
+		<result column="award_id" jdbcType="INTEGER" property="award_id"/>
+	</resultMap>
+	<sql id="Base_Task_List">
+		task_id,task_pic_id,task_info,del,modify_time,add_time,longitude,latitude,balance,qr_code_url,qr_code_id,address,qr_address,task_title,task_distance,task_type,award,task_durtion,next_taskid,award_id
+	</sql>
+	<select id="selectFrogActivityEventPlaceById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/>
+		from frog_activity_event_place
+		where id=#{id}
+	</select>
+	<select id="selectFrogActivityEventPlaceByEventId" parameterType="java.lang.Integer"  resultMap="BaseResultMap">
+		select <include refid="Base_Column_List"/>
+		from frog_activity_event_place
+		where eventid=#{eventid}
+	</select>
+	<select id="selectAllTaskInfoByEvent" parameterType="java.lang.Integer" resultMap="TaskMap">
+		select b.task_id,b.task_info,b.address,b.add_time,b.longitude,b.latitude,b.task_title,b.award_id,b.qr_code_id,b.qr_address,b.task_type
+		from frog_activity_event_place a,frog_task b
+		where a.eventid=#{eventId} and a.taskid=b.task_id
+	</select>
+	<insert id="insertEventPlace" parameterType="com.frog.model.FrogActivityEventPlace">
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="id">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+		insert into frog_activity_event_place
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="eventid != null">
+				eventid,
+			</if>
+			<if test="taskid != null">
+				taskid,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="eventid != null">
+				#{eventid},
+			</if>
+			<if test="taskid != null">
+				#{taskid},
+			</if>
+		</trim>
+	</insert>
+</mapper>

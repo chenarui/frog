@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frog.dao.TaskInfoMapper">
+	<resultMap id="BaseResultMap" type="com.frog.model.FrogTask">
+		<id column="task_id" jdbcType="INTEGER" property="task_id" />
+		<result column="task_pic_id" jdbcType="VARCHAR" property="task_pic_id" />
+		<result column="task_info" jdbcType="VARCHAR" property="task_info" />
+		<result column="del" jdbcType="BIT" property="del" />
+		<result column="modify_time" jdbcType="TIMESTAMP" property="modify_time" />
+		<result column="add_time" jdbcType="TIMESTAMP" property="add_time" />
+		<result column="longitude" jdbcType="DOUBLE" property="longitude" />
+		<result column="latitude" jdbcType="DOUBLE" property="latitude" />
+		<result column="balance" jdbcType="DOUBLE" property="balance"/>
+		<result column="qr_code_url" jdbcType="VARCHAR" property="qr_code_url"/>
+		<result column="qr_code_id" jdbcType="VARCHAR" property="qr_code_id"/>
+		<result column="address" jdbcType="VARCHAR" property="address"/>
+		<result column="qr_address" jdbcType="VARCHAR" property="qr_address"/>
+		<result column="task_title" jdbcType="VARCHAR" property="task_title"/>
+		<result column="task_distance" jdbcType="DOUBLE" property="task_distance"/>
+		<result column="task_type" jdbcType="BIT" property="task_type"/>
+		<result column="award" jdbcType="VARCHAR" property="award"/>
+		<result column="task_durtion" jdbcType="VARCHAR" property="task_durtion"/>
+		<result column="next_taskid" jdbcType="INTEGER" property="next_taskid"/>
+		<result column="award_id" jdbcType="INTEGER" property="award_id"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		task_id,task_pic_id,task_info,del,modify_time,add_time,longitude,latitude,balance,qr_code_url,qr_code_id,address,qr_address,task_title,task_distance,task_type,award,task_durtion,next_taskid,award_id
+	</sql>
+	<select id="allTaskInfo" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from frog_task where del=false
+		order by add_time desc
+	</select>
+	
+	
+	<select id="selectAllTaskInfo" parameterType="com.frog.model.FrogTask"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" /> 
+		from frog_task where frog_task.task_id in (select frog_take.task_id
+		from frog_take where frog_take.user_id=#{user_id}
+		<if test="status !=null">
+			and frog_take.status=#{status}
+		</if>
+		order by frog_take.add_time desc)
+		limit #{page},5
+	</select>
+	<select id="AllTask" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" /> 
+		from frog_task 
+	</select>
+	<select id="selectAllTaskInfos" resultMap="BaseResultMap">
+		select 
+		<include refid="Base_Column_List" /> 
+		from frog_task where del=0 order by add_time desc limit #{page},5
+	</select>
+	<update id="updateDel" parameterType="java.lang.Integer">
+		update frog_task set del =#{del} where task_id=#{task_id}
+	</update>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	select <include refid="Base_Column_List"/> from frog_task where task_id=#{task_id}
+	</select>
+	<select id="selectTaskInfo" parameterType="com.frog.model.FrogTask" resultMap="BaseResultMap">
+	select <include refid="Base_Column_List"/> from frog_task where task_id=#{task_id} and del=false
+	</select>
+	<select id="selectTaskInfoByAddress" parameterType="java.lang.String" resultMap="BaseResultMap">
+	select <include refid="Base_Column_List"/> from frog_task where address=#{address} and del=false
+	</select>
+	<update id="updateTaskInfo" parameterType="com.frog.model.FrogTask">
+		update frog_task set
+		<trim prefix=" " suffix=" " suffixOverrides=",">
+			<if test="task_pic_id != null">
+				task_pic_id=#{task_pic_id,jdbcType=VARCHAR},
+			</if>
+			<if test="task_info != null">
+				task_info=#{task_info,jdbcType=VARCHAR},
+			</if>
+			<if test="modify_time != null">
+				modify_time=#{modify_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="latitude != null">
+				latitude=#{latitude,jdbcType=VARCHAR},
+			</if>
+			<if test="longitude != null">
+				longitude=#{longitude,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				address=#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="task_title != null">
+				task_title=#{task_title,jdbcType=VARCHAR},
+			</if>
+			<if test="task_type != null">
+				task_type=#{task_type,jdbcType=INTEGER},
+			</if>
+		    <if test="award != null">
+				award=#{award,jdbcType=VARCHAR},
+			</if>
+			<if test="task_durtion != null">
+				task_durtion=#{task_durtion,jdbcType=VARCHAR},
+			</if>
+			<if test="next_taskid != null">
+				next_taskid=#{next_taskid,jdbcType=INTEGER},
+			</if>
+			<if test="award_id != null">
+				next_taskid=#{next_taskid,jdbcType=INTEGER}
+			</if>
+		</trim>
+		where task_id=#{task_id,jdbcType=INTEGER}
+	</update>
+	<insert id="addTask" parameterType="com.frog.model.FrogTask" useGeneratedKeys="true" keyProperty="task_id">
+		insert into frog_task
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="task_pic_id != null">
+				task_pic_id,
+			</if>
+			<if test="task_info != null">
+				task_info,
+			</if>
+			<if test="del != null">
+				del,
+			</if>
+			<if test="add_time != null">
+				add_time,
+			</if>
+			<if test="modify_time != null">
+				modify_time,
+			</if>
+			<if test="latitude != null">
+				latitude,
+			</if>
+			<if test="longitude != null">
+				longitude,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+			<if test="task_title != null">
+				task_title,
+			</if>
+			<if test="task_type != null">
+				task_type,
+			</if>
+		    <if test="award != null">
+				award,
+			</if>
+			<if test="task_durtion != null">
+				task_durtion,
+			</if>
+			<if test="next_taskid != null">
+				next_taskid,
+			</if>
+			<if test="award_id != null">
+				award_id
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="task_id != null">
+				#{task_id,jdbcType=INTEGER},
+			</if>
+			<if test="task_pic_id != null">
+				#{task_pic_id,jdbcType=VARCHAR},
+			</if>
+			<if test="task_info != null">
+				#{task_info,jdbcType=VARCHAR},
+			</if>
+			<if test="del != null">
+				#{del,jdbcType=VARCHAR},
+			</if>
+			<if test="add_time != null">
+				#{add_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modify_time != null">
+				#{modify_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="latitude != null">
+				#{latitude,jdbcType=VARCHAR},
+			</if>
+			<if test="longitude != null">
+				#{longitude,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="task_title != null">
+				#{task_title,jdbcType=VARCHAR},
+			</if>
+			<if test="task_type != null ">
+				#{task_type,jdbcType=INTEGER},
+			</if>
+			<if test="award != null">
+				#{award,jdbcType=INTEGER},
+			</if>
+			<if test="task_durtion != null">
+				#{task_durtion,jdbcType=VARCHAR},
+			</if>
+			<if test="next_taskid != null">
+				next_taskid=#{next_taskid,jdbcType=INTEGER},
+			</if>
+			<if test="award_id != null">
+				award_id=#{award_id,jdbcType=INTEGER}
+			</if>
+		</trim>
+	</insert>
+	
+	
+</mapper>

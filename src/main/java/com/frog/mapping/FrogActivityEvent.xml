@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frog.dao.FrogActivity">
+	<resultMap id="BaseResultMap" type="com.frog.model.FrogActivityBean">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<id column="del" jdbcType="INTEGER" property="del" />
+		<result column="pic" jdbcType="VARCHAR" property="pic"/>
+		<result column="title" jdbcType="VARCHAR" property="title" />
+		<result column="subtitle" jdbcType="VARCHAR" property="subtitle" />
+		<result column="url" jdbcType="VARCHAR" property="url"/>
+		<result column="add_time" jdbcType="TIMESTAMP" property="add_time" />
+		<result column="end_time" jdbcType="TIMESTAMP" property="end_time" />
+		<result column="place" jdbcType="VARCHAR" property="place"/>
+		<result column="mode" jdbcType="VARCHAR" property="mode"/>
+		<result column="time" jdbcType="VARCHAR" property="time"/>
+		<result column="info" jdbcType="VARCHAR" property="info"/>
+		<result column="rule" jdbcType="VARCHAR" property="rule"/>
+		<result column="care" jdbcType="VARCHAR" property="care"/>
+		<result column="activityid" jdbcType="INTEGER" property="activityid"/>
+		<result column="activityurl" jdbcType="VARCHAR" property="activityurl"/>
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		id,pic,title,subtitle,url,add_time,end_time,place,mode,time,info,rule,care,del,activityid,activityurl
+	</sql>
+	<select id="getNowFrogActivity" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" />
+		from frog_Activity  where del=#{isdel}
+	</select>
+	<select id="getFrogActivityById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" />
+		from frog_Activity where id=#{id}
+	</select>
+	
+	<update id="changeFrogActivityState" parameterType="map">
+		update frog_Activity set del=#{state} where id=#{id}
+	</update>
+	
+	
+</mapper>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frog.dao.StatisticsMapper">
+	<resultMap type="com.frog.model.RankBean" id="rankResultMap">
+		<result column="name" jdbcType="VARCHAR" property="name"/>
+		<result column="ordernum" jdbcType="INTEGER" property="ordernum"/>
+		<result column="totaltasknum" jdbcType="INTEGER" property="totaltasknum"/>
+		<result column="pic" jdbcType="VARCHAR" property="pic"/>
+	</resultMap>
+	<resultMap type="com.frog.model.TakeHis" id="takeHisMap">
+		<result column="taskName" jdbcType="VARCHAR" property="taskName"/>
+		<result column="startAddress" jdbcType="VARCHAR" property="startAddress"/>
+		<result column="endAddress" jdbcType="VARCHAR" property="endAddress"/>
+		<result column="completeTime" jdbcType="TIMESTAMP" property="completeTime"/>
+	</resultMap>
+	<select id="selectThisWeekTaskNum" parameterType="INTEGER" resultType="java.lang.Integer">
+		select count(*) from frog_take where user_id=#{user_id} and YEARWEEK(date_format(add_time,'%Y-%m-%d')) = YEARWEEK(now()) and status=2
+	</select>
+	<select id="selectThisWeekDistance" parameterType="INTEGER" resultType="java.lang.Double">
+		select SUM(distance) from frog_take where user_id=#{user_id} and YEARWEEK(date_format(add_time,'%Y-%m-%d')) = YEARWEEK(now()) and status=2
+	</select>
+	<select id="selectThisWeekWaCoins" parameterType="INTEGER" resultType="java.lang.Double">
+		select SUM(total_price) from frog_take where user_id=#{user_id} and YEARWEEK(date_format(add_time,'%Y-%m-%d')) = YEARWEEK(now()) and status=2
+	</select>
+	<select id="selectThisWeekOrder"  parameterType="INTEGER" resultType="INTEGER">
+		select rowno from
+		(select 
+		user_id,num,(@rowno:=@rowno+1) as rowno 
+		from 
+		(select count(*) as num,user_id from frog_take where YEARWEEK(date_format(add_time,'%Y-%m-%d')) = YEARWEEK(now()) and status=2 group by user_id) a,
+		(select (@rowno:=0)) b
+		order by num desc) c
+		where user_id=#{user_id}
+	</select>
+	<select id="selectRankThisWeek" resultMap="rankResultMap">
+		select name,pic_url as pic,rowno as ordernum,num as totaltasknum from
+		(select 
+		user_id,num,(@rowno:=@rowno+1) as rowno,name,pic_url 
+		from 
+		(select count(*) as num,f.user_id as user_id,u.nick_name as name,u.pic_url as pic_url
+		 from frog_take f,frog_user u 
+		 where f.user_id=u.user_id and YEARWEEK(date_format(f.add_time,'%Y-%m-%d')) = YEARWEEK(now()) and status=2 group by user_id) a,
+		(select (@rowno:=0)) b
+		order by num desc) c
+		limit 0,10
+	</select>
+	<select id="selectAllTakeHiss" resultMap="takeHisMap">
+		select b.task_title as taskName, a.address as startAddress,b.address as endAddress,complete_time as completeTime
+		from
+		(select f.complete_time,f.task_id,t.address from frog_take f,frog_task t where f.last_taskid=t.task_id and f.user_id=#{user_id} and status=#{status} limit #{page},10) a,
+		frog_task b 
+		where 
+		a.task_id = b.task_id
+	</select>
+	<select id="selectAllTakeHisGoing" resultMap="takeHisMap">
+		select b.task_title as taskName, b.address as startAddress,a.address as endAddress,complete_time as completeTime
+		from
+		(select f.complete_time,f.task_id,t.address from frog_take f,frog_task t where f.last_taskid=t.task_id and f.user_id=#{user_id} and status=0 limit #{page},10) a,
+		frog_task b 
+		where 
+		a.task_id = b.task_id
+	</select>
+</mapper>

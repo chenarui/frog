@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frog.dao.FrogGoodMapper">
+	<resultMap id="BaseResultMap" type="com.frog.model.FrogGoods">
+		<id column="good_id" jdbcType="INTEGER" property="good_id" />
+		<result column="good_name" jdbcType="VARCHAR" property="good_name" />
+		<result column="path" jdbcType="VARCHAR" property="path" />
+		<result column="balance" jdbcType="DECIMAL" property="balance" />
+		<result column="price" jdbcType="DECIMAL" property="price" />
+		<result column="add_time" jdbcType="TIMESTAMP" property="add_time"/>
+		<result column="del" jdbcType="BIT" property="del"/>
+		<result column="update_time" property="update_time" jdbcType="TIMESTAMP"/>
+		<result column="good_info" property="good_info" jdbcType="VARCHAR"/>
+		<result column="type" property="type" jdbcType="VARCHAR"/>
+		<result column="num" jdbcType="INTEGER" property="num"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		good_id,good_name,path,balance,price,add_time,del,update_time,good_info,type,num
+	</sql>
+	<select id="selectGoodByGoodId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from frog_goods
+		where good_id=#{good_id}
+	</select>
+
+	<select id="selectGoods" resultType="com.frog.model.FrogGoods">
+		select
+		<include refid="Base_Column_List" />
+		from frog_goods
+	</select>
+	<select id="selectAllGoods" parameterType="com.frog.model.FrogGoods" resultMap="BaseResultMap">
+	select <include refid="Base_Column_List"/> from frog_goods where 1=1
+	<if test="good_name !=null and good_name !=''">
+	and good_name=#{good_name}
+	</if>
+	order by add_time desc
+	limit #{page},5
+	</select>
+	<select id="selectGoodsCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+	select count(1) from frog_goods where 1=1
+	<if test="good_name !=null and good_name !=''">
+	and good_name=#{good_name}
+	</if>
+	</select>
+	<update id="delGoods" parameterType="com.frog.model.FrogGoods">
+	update frog_goods <set>
+	del=true,
+	update_time=now()
+	</set>
+	where good_id=#{good_id}
+	</update>
+	<select id="selectGoodsInfo" parameterType="com.frog.model.FrogGoods" resultMap="BaseResultMap">
+	select <include refid="Base_Column_List"/> from frog_goods where 
+	  good_id=#{good_id}
+	and del=false
+	</select>
+	<update id="updateGoodsInfo" parameterType="com.frog.model.FrogGoods">
+	update frog_goods <set>
+	<if test="good_name !=null and good_name!=''">
+	good_name=#{good_name},
+	</if>
+	<if test="good_info !=null and good_info !=''">
+	good_info=#{good_info},
+	</if>
+	<if test="path !=null and path !=''">
+	path=#{path},
+	</if>
+	<if test="balance !=null and balance !=''">
+	balance=#{balance}
+	</if>
+	where  good_id=#{good_id}
+	</set>
+	</update>
+	<insert id="insertGoodsInfo" parameterType="com.frog.model.FrogGoods" >
+	insert into frog_goods (good_name,path,balance,price,add_time,del,good_info)
+   values(#{good_name},#{path},#{balance},#{price},now(),false,#{good_info})
+	</insert>
+	<insert id="insert" parameterType="com.frog.model.FrogGoods">
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="good_id">
+			SELECT LAST_INSERT_ID() AS good_id
+		</selectKey>
+		insert into frog_goods
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+		     <if test="good_id !=null">
+		     good_id,
+		     </if>
+			<if test="good_name != null">
+				good_name,
+			</if>
+			<if test="path != null">
+				path,
+			</if>
+			<if test="balance != null">
+				balance,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="add_time != null">
+				add_time,
+			</if>
+			<if test="del != null">
+				del,
+			</if>
+			<if test="good_info != null">
+				good_info,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="num != null">
+				num,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="good_id != null">
+				#{good_id,jdbcType=INTEGER},
+			</if>
+			<if test="good_name != null">
+				#{good_name,jdbcType=VARCHAR},
+			</if>
+			<if test="path != null">
+				#{path,jdbcType=VARCHAR},
+			</if>
+			<if test="balance != null">
+				#{balance,jdbcType=DOUBLE},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=DOUBLE},
+			</if>
+			<if test="add_time != null">
+				#{add_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="del != null">
+				#{del,jdbcType=BIT},
+			</if>
+			<if test="good_info != null">
+				#{good_info,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="num != null">
+				#{num,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	<select id="selectFrogGoods" parameterType="java.lang.String" resultMap="BaseResultMap">
+	select <include refid="Base_Column_List" />
+	from frog_goods 
+	where good_name like '%${good_name}%'
+	</select>
+	
+	<select id="selectGoodsByType" parameterType="java.lang.String" resultMap="BaseResultMap">
+	select <include refid="Base_Column_List" />
+	from frog_goods
+	where type=#{type}
+	</select>
+	
+	<update id="updateGoodByNum" parameterType="com.frog.model.FrogGoods">
+	update frog_goods
+	set num = num+1 
+	where good_id = #{good_id}
+	</update>
+	
+	<select id="selectGoodByNum" parameterType="com.frog.model.FrogGoods" resultMap="BaseResultMap">
+	select <include refid="Base_Column_List" />
+	from frog_goods
+	order by num desc 
+	limit 0,5
+	</select>
+</mapper>

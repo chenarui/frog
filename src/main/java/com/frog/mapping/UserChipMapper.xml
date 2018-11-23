@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frog.dao.UserChipMapper">
+	<resultMap id="BaseResultMap" type="com.frog.model.UserChip">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="user_id" jdbcType="INTEGER" property="user_id"/>
+		<result column="chip_one" jdbcType="INTEGER" property="chip_one" />
+		<result column="chip_two" jdbcType="INTEGER" property="chip_two" />
+		<result column="chip_thr" jdbcType="INTEGER" property="chip_thr" />
+		<result column="chip_for" jdbcType="INTEGER" property="chip_for" />
+		<result column="chip_fiv" jdbcType="INTEGER" property="chip_fiv" />
+		<result column="chip_compose" jdbcType="INTEGER" property="chip_compose" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="update_time" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,user_id,chip_one,chip_two,chip_thr,chip_for,chip_fiv,chip_compose,update_time
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from frog_user
+		where id = #{user_id,jdbcType=INTEGER}
+	</select>
+	
+	<select id="selectUserChipByUser" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+		select <include refid="Base_Column_List" />
+		from user_chip where user_id=#{user_id,jdbcType=INTEGER}
+	</select>
+	
+	<insert id="insert" parameterType="com.frog.model.UserChip">
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="id">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+		insert into user_chip
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="user_id != null">
+				user_id,
+			</if>
+			<if test="chip_one != null">
+				chip_one,
+			</if>
+			<if test="chip_two != null">
+				chip_two,
+			</if>
+			<if test="chip_thr != null">
+				chip_thr,
+			</if>
+			<if test="chip_for != null">
+				chip_for,
+			</if>
+			<if test="chip_fiv != null">
+				chip_fiv,
+			</if>
+			<if test="chip_compose != null">
+				chip_compose,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="user_id != null">
+				#{user_id,jdbcType=INTEGER},
+			</if>
+			<if test="chip_one != null">
+				#{chip_one,jdbcType=INTEGER},
+			</if>
+			<if test="chip_two != null">
+				#{chip_two,jdbcType=INTEGER},
+			</if>
+			<if test="chip_thr != null">
+				#{chip_thr,jdbcType=INTEGER},
+			</if>
+			<if test="chip_for != null">
+				#{chip_for,jdbcType=INTEGER},
+			</if>
+			<if test="chip_fiv != null">
+				#{chip_fiv,jdbcType=INTEGER},
+			</if>
+			<if test="chip_compose != null">
+				#{chip_compose,jdbcType=INTEGER},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateChip" parameterType="java.lang.Integer">
+		update user_chip set 
+		<if test="chip_one !=null">
+		chip_one=#{chip_one},
+		</if>
+		<if test="chip_two !=null">
+		chip_two=#{chip_two},
+		</if>
+		<if test="chip_thr !=null">
+		chip_thr=#{chip_thr},
+		</if>
+		<if test="chip_for !=null">
+		chip_for=#{chip_for},
+		</if>
+		<if test="chip_fiv !=null">
+		chip_fiv=#{chip_fiv},
+		</if>
+		<if test="chip_compose !=null">
+		chip_compose=#{chip_compose}
+		</if>
+		where user_id=#{user_id}
+	</update>
+</mapper>

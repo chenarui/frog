@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.frog.dao.FrogPlayMapper">
+	<resultMap id="BaseResultMap" type="com.frog.model.FrogPlay">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="playname" jdbcType="VARCHAR" property="playname" />
+		<result column="price" jdbcType="INTEGER" property="price" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="wire" jdbcType="VARCHAR" property="wire"/>
+		<result column="diff" jdbcType="VARCHAR" property="diff"/>
+		<result column="theme" jdbcType="VARCHAR" property="theme"/>
+		<result column="pic" jdbcType="VARCHAR" property="pic"/>
+		<result column="ref" jdbcType="VARCHAR" property="ref"/>
+		<result column="additional" jdbcType="VARCHAR" property="additional"/>
+		<result column="address" jdbcType="VARCHAR" property="address"/>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,playname,price,status,wire,diff,theme,pic,ref,additional,address
+	</sql>
+	<update id="updateAwards" parameterType="com.frog.model.FrogActivityAward">
+		update frog_activity_awardinfo set
+		<trim prefix=" " suffix=" " suffixOverrides=",">
+			<if test="awardname != null">
+				awardname=#{awardname,jdbcType=VARCHAR},
+			</if>
+			<if test="awardpic != null">
+				awardpic=#{awardpic,jdbcType=VARCHAR},
+			</if>
+			<if test="awardnum != null">
+				awardnum=#{awardnum,jdbcType=INTEGER},
+			</if>
+			<if test="awardsurplus != null">
+				awardsurplus=#{awardsurplus,jdbcType=INTEGER},
+			</if>
+			<if test="addtime != null">
+				addtime=#{addtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endtime != null">
+				endtime=#{endtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="activity_id != null">
+				activity_id=#{activity_id,jdbcType=INTEGER},
+			</if>
+		</trim>
+		where id=#{id,jdbcType=INTEGER}
+	</update>
+	<select id="selectFrogPlay" parameterType="com.frog.model.FrogPlay" resultMap="BaseResultMap">
+		select wire,playname,price,status  
+		from frog_play 
+ 	</select>
+ 	
+ 	<insert id="addFrogPlay" parameterType="com.frog.model.FrogPlay">
+		<selectKey resultType="java.lang.Integer" order="AFTER"
+			keyProperty="id">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+		insert into frog_play
+		<trim suffix=")" prefix="(" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="playname != null">
+				playname,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="wire != null">
+				wire,
+			</if>
+			<if test="diff != null">
+				diff,
+			</if>
+			<if test="theme != null">
+				theme,
+			</if>
+			<if test="pic != null">
+				pic,
+			</if>
+			<if test="ref != null">
+				ref,
+			</if>
+			<if test="additional != null">
+				additional,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="playname != null">
+				#{playname},
+			</if>
+			<if test="price != null">
+				#{price},
+			</if>
+			<if test="status != null">
+				#{status},
+			</if>
+			<if test="wire != null">
+				#{wire},
+			</if>
+			<if test="diff != null">
+				#{diff},
+			</if>
+			<if test="theme != null">
+				#{theme},
+			</if>
+			<if test="pic != null">
+				#{pic},
+			</if>
+			<if test="ref != null">
+				#{ref},
+			</if>
+			<if test="additional != null">
+				#{additional},
+			</if>
+			<if test="address != null">
+				#{address}
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="delFrogPlayById" parameterType="java.lang.Integer">
+	update frog_play set status=1 where id=#{id}
+	</update>
+	
+	<update id="updateFrogPlayById" parameterType="com.frog.model.FrogPlay">
+	update frog_play set
+		<if test="playname != null and playname != ''">
+		playname=#{playname,jdbcType=VARCHAR},
+		</if>
+		<if test="wire != null and wire != ''">
+		wire=#{wire,jdbcType=VARCHAR},
+		</if>
+		<if test="price != null and price != ''">
+		price=#{price,jdbcType=INTEGER},
+		</if>
+		<if test="diff != null and diff != ''">
+		diff=#{diff,jdbcType=VARCHAR},
+		</if>
+		<if test="theme != null and theme != ''">
+		theme=#{theme,jdbcType=VARCHAR},
+		</if>
+		<if test="pic != null and pic != ''">
+		pic=#{pic,jdbcType=VARCHAR},
+		</if>
+		<if test="ref != null and ref != ''">
+		ref=#{ref,jdbcType=VARCHAR},
+		</if>
+		<if test="additional != null and additional != ''">
+		additional=#{additional,jdbcType=VARCHAR},
+		</if>
+		<if test="address != null and address != ''">
+		address=#{address,jdbcType=VARCHAR}
+		</if>
+		where id=#{id}	
+	</update>
+	
+	<select id="selectFrogPlayInfo" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	 	select <include refid="Base_Column_List"/> from frog_play
+	 	where id=#{id}
+	</select>
+</mapper>
